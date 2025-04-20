@@ -89,10 +89,9 @@ if($action == 'delete_result'){
 
 // New OTP handling actions
 if($action == 'check_student_and_generate_otp'){
-    // Check if student exists in database
     $student_code = $_POST['student_code'];
+    $email = $_POST['email']; // Get the email entered by the user
     
-    // Use existing database connection from admin_class.php
     $qry = $crud->db->query("SELECT id FROM students WHERE student_code = '$student_code'");
     if($qry->num_rows > 0){
         // Student exists, generate OTP
@@ -103,12 +102,16 @@ if($action == 'check_student_and_generate_otp'){
         $_SESSION['student_otp_expiry'] = time() + 300; // 5 minutes expiry
         $_SESSION['student_code'] = $student_code;
         
+        // Send OTP email
+        $response = sendOTPToEmail($otp, $email);
+        
         // Return success with OTP (in production, you would send OTP via email/SMS)
-        echo json_encode(array('status' => 'success', 'otp' => $otp));
+        echo json_encode(array('status' => 'success', 'otp' => $otp, 'email_response' => $response));
     } else {
         echo json_encode(array('status' => 'error', 'message' => 'Student ID # is incorrect.'));
     }
 }
+
 
 if($action == 'verify_student_otp'){
     $input_otp = $_POST['otp'];
@@ -165,6 +168,58 @@ function generateOTP($length = 6) {
     }
     return $otp;
 }
+
+function sendOTPToEmail($otp, $email) {
+    // Path to PHPMailer - adjust if needed based on your installation method
+    require 'vendor/autoload.php'; // Use this if installed via Composer
+    // OR use these if manually downloaded:
+    // require 'PHPMailer/src/Exception.php';
+    // require 'PHPMailer/src/PHPMailer.php';
+    // require 'PHPMailer/src/SMTP.php';
+    
+    // Create a new PHPMailer instance
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    
+    try {
+        // Server settings
+        $mail->isSMTP();                                      // Use SMTP
+        $mail->Host       = 'smtp.gmail.com';                 // SMTP server address (example: Gmail)
+        $mail->SMTPAuth   = true;                             // Enable SMTP authentication
+        $mail->Username   = 'ydkdan6@gmail.com';           // SMTP username
+        $mail->Password   = 'pajsikmxnokfyxav';              // SMTP password or app password
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+        $mail->Port       = 587;                              // TCP port to connect to
+        
+        // Recipients
+        $mail->setFrom('ydkdan6@gmail.com', 'Student Results System');
+        $mail->addAddress($email);                            // Add recipient
+        
+        // Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Your OTP Verification Code';
+        $mail->Body    = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
+                <h2 style='color: #333;'>OTP Verification</h2>
+                <p>Your One-Time Password (OTP) for accessing student results is:</p>
+                <div style='background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 24px; letter-spacing: 5px; font-weight: bold;'>
+                    {$otp}
+                </div>
+                <p>This code will expire in 5 minutes.</p>
+                <p style='font-size: 12px; color: #777; margin-top: 30px;'>
+                    This is an automated email. Please do not reply to this message.
+                </p>
+            </div>
+        ";
+        $mail->AltBody = "Your OTP verification code is: {$otp}. This code will expire in 5 minutes.";
+        
+        // Send the email
+        $mail->send();
+        return json_encode(['success' => true, 'message' => 'OTP sent successfully']);
+    } catch (Exception $e) {
+        return json_encode(['success' => false, 'error' => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+    }
+}
+
 
 ob_end_flush();
 ?>

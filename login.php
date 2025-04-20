@@ -90,6 +90,11 @@ header("location:index.php?page=home");
                 <label for="student_code" class="control-label text-dark">Student ID #:</label>
                 <input type="text" id="student_code" name="student_code" class="form-control form-control-sm">
               </div>
+
+              <div class="form-group">
+  <label for="email" class="control-label text-dark">Email Address:</label>
+  <input type="email" id="email" name="email" class="form-control form-control-sm" required>
+</div>
           </form>
         </div>
       </div>
@@ -154,7 +159,10 @@ header("location:index.php?page=home");
       console.log('Response:', resp); // ✅ DEBUG LOG
 
       if (resp.status === 'success') {
-        alert("Your OTP is: " + resp.otp);
+        alert("An OTP has been sent to your email. Please check your inbox and spam folder.");
+  
+
+        // sendOTPToEmail(resp.otp, $('#email').val());
 
         $('#view_student_results').modal('hide');
 
