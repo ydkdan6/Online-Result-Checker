@@ -19,7 +19,7 @@
                         <option value="<?php echo $row['id'] ?>" data-class_id='<?php echo $row['class_id'] ?>'  data-class='<?php echo $row['class'] ?>' <?php echo isset($student_id) && $student_id == $row['id'] ? "selected" : '' ?>><?php echo $row['student_code'].' | '.ucwords($row['name']) ?></option>
                   <?php endwhile; ?>
                 </select>
-                <small id="class"><?php echo isset($class) ? "Current Class: ".$class : "" ?></small>
+                <small id="class"><?php echo isset($class) ? "Current Level: ".$class : "" ?></small>
                 <input type="hidden" name="class_id" value="<?php echo isset($class_id) ? $class_id: '' ?>">
             </div>
           </div>
@@ -29,7 +29,7 @@
           <div class="col-md-12">
             <div class="d-flex justify-content-center align-items-center">
             	<div class="form-group col-sm-4">
-	                <label for="" class="control-label">Subject</label>
+	                <label for="" class="control-label">Course Title</label>
 	                <select name="" id="subject_id" class="form-control select2 select2-sm input-sm">
 	                  <option></option> 
 	                  <?php 
@@ -41,7 +41,7 @@
 	                </select>
 	            </div>
 	            <div class="form-group col-sm-3">
-	                <label for="" class="control-label">Mark</label>
+	                <label for="" class="control-label">Course Mark</label>
 	                <input type="text" class="form-control form-control-sm text-right number" id="mark" maxlength="6">
 	            </div>
 	            <button class="btn btn-sm btn-primary bg-gradient-primary" type="button" id="add_mark">Add</button>
@@ -52,9 +52,9 @@
             <table class="table table-bordered" id="mark-list">
             	<thead>
             		<tr>
-            			<th>Subject Code</th>
-            			<th>Subject</th>
-            			<th>Mark</th>
+            			<th>Course Code</th>
+            			<th>Course Title</th>
+            			<th>Course Mark</th>
             			<th></th>
             		</tr>
             	</thead>
@@ -105,7 +105,7 @@
 		var class_id = $('#student_id option[value="'+$(this).val()+'"]').attr('data-class_id');
 		var _class = $('#student_id option[value="'+$(this).val()+'"]').attr('data-class');
 		$('[name="class_id"]').val(class_id)
-		$('#class').text("Current Class: "+_class);
+		$('#class').text("Current Level: "+_class);
 	})
 	$('#add_mark').click(function(){
 		var subject_id = $('#subject_id').val()

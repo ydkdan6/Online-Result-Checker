@@ -10,7 +10,7 @@
             <div id="msg" class=""></div>
             <div class="form-group text-dark">
               <div class="form-group">
-                <label for="" class="control-label">Student ID #</label>
+                <label for="" class="control-label">Student Registration Number #</label>
                 <input type="text" class="form-control form-control-sm" name="student_code" value="<?php echo isset($student_code) ? $student_code : '' ?>" required>
               </div>
             </div>
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group text-dark">
               <div class="form-group">
-                <label for="" class="control-label">Class</label>
+                <label for="" class="control-label">Level</label>
                 <select name="class_id" id="" class="form-control select2 select2-sm" required>
                   <option></option> 
                   <?php 

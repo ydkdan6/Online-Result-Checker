@@ -21,10 +21,10 @@
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
-						<th>Student Code</th>
+						<th>Student Registration Number</th>
 						<th>Student Name</th>
-						<th>Class</th>
-						<th>Subjects</th>
+						<th>Level</th>
+						<th>Course Title</th>
 						<th>Average</th>
 						<th>Action</th>
 					</tr>
@@ -38,14 +38,26 @@
 					}
 					$qry = $conn->query("SELECT r.*,concat(s.firstname,' ',s.middlename,' ',s.lastname) as name,s.student_code,concat(c.level,'-',c.section) as class FROM results r inner join classes c on c.id = r.class_id inner join students s on s.id = r.student_id $where order by unix_timestamp(r.date_created) desc ");
 					while($row= $qry->fetch_assoc()):
-						$subjects = $conn->query("SELECT * FROM result_items where result_id =".$row['id'])->num_rows;
-					?>
+						$subject_qry = $conn->query("SELECT s.subject_code FROM result_items ri 
+						LEFT JOIN subjects s ON s.id = ri.subject_id 
+						WHERE ri.result_id = ".$row['id']);
+					
+					if (!$subject_qry) {
+						echo "<pre>SQL Error: " . $conn->error . "</pre>";
+					} else {
+						$subject_codes = [];
+						while($sub = $subject_qry->fetch_assoc()) {
+							$subject_codes[] = $sub['subject_code'];
+						}
+						$subject_codes_display = implode(', ', $subject_codes);
+					}
+										?>
 					<tr>
 						<th class="text-center"><?php echo $i++ ?></th>
 						<td><b><?php echo $row['student_code'] ?></b></td>
 						<td><b><?php echo ucwords($row['name']) ?></b></td>
 						<td><b><?php echo ucwords($row['class']) ?></b></td>
-						<td class="text-center"><b><?php echo $subjects ?></b></td>
+						<td class="text-center"><b><?php echo $subject_codes_display ?></b></td>
 						<td class="text-center"><b><?php echo $row['marks_percentage'] ?></b></td>
 						<td class="text-center">
 							<?php if(isset($_SESSION['login_id'])): ?>

@@ -18,9 +18,9 @@
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
-						<th>Code</th>
-						<th>Subjects</th>
-						<th>Description</th>
+						<th>Course Code</th>
+						<th>Course Title</th>
+						<th>Course Unit</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -56,13 +56,13 @@
 	$(document).ready(function(){
 		$('#list').dataTable()
 		$('.new_subject').click(function(){
-			uni_modal("New Subject","manage_subject.php")
+			uni_modal("New Course","manage_subject.php")
 		})
 		$('.manage_subject').click(function(){
 			uni_modal("Manage Subject","manage_subject.php?id="+$(this).attr('data-id'))
 		})
 	$('.delete_subject').click(function(){
-	_conf("Are you sure to delete this Subject?","delete_subject",[$(this).attr('data-id')])
+	_conf("Are you sure to delete this Course?","delete_subject",[$(this).attr('data-id')])
 	})
 	})
 	function delete_subject($id){

@@ -10,7 +10,7 @@
 			<table class="table tabe-hover table-bordered" id="list">
 				<colgroup>
 					<col width="5%">
-					<col width="15%">
+					<col width="25%">
 					<col width="25%">
 					<col width="25%">
 					<col width="15%">
@@ -18,9 +18,9 @@
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
-						<th>Student ID</th>
+						<th>Student Registration Number</th>
 						<th>Name</th>
-						<th>Class</th>
+						<th>Level</th>
 						<th>Action</th>
 					</tr>
 				</thead>

@@ -32,7 +32,7 @@
             <a href="./index.php?page=classes" class="nav-link nav-classes">
               <i class="nav-icon fas fa-th-list"></i>
               <p>
-                Classes
+                Levels
               </p>
             </a>
           </li>    
@@ -40,7 +40,7 @@
             <a href="./index.php?page=subjects" class="nav-link nav-subjects">
               <i class="nav-icon fas fa-book"></i>
               <p>
-                Subjects
+                Courses
               </p>
             </a>
           </li>   

@@ -12,16 +12,16 @@ if(isset($_GET['id'])){
 		<input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
 		<div id="msg" class="form-group"></div>
 		<div class="form-group">
-			<label for="code" class="control-label">Subject Code</label>
+			<label for="code" class="control-label">Course Code</label>
 			<input type="text" class="form-control form-control-sm" name="subject_code" id="subject_code" value="<?php echo isset($subject_code) ? $subject_code : '' ?>">
 		</div>
 		<div class="form-group">
-			<label for="subject" class="control-label">Subject</label>
+			<label for="subject" class="control-label">Course Title</label>
 			<input type="text" class="form-control form-control-sm" name="subject" id="subject" value="<?php echo isset($subject) ? $subject : '' ?>">
 		</div>
 		<div class="form-group">
-			<label for="description" class="control-label">Description</label>
-			<textarea name="description" id="description" cols="30" rows="4" class="form-control"><?php echo isset($description) ? $description : '' ?></textarea>
+			<label for="description" class="control-label">Course Unit</label>
+			<textarea name="description" id="description" cols="10" rows="1" class="form-control"><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>
 	</form>
 </div>
