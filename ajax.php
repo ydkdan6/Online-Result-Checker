@@ -170,34 +170,23 @@ function generateOTP($length = 6) {
 }
 
 function sendOTPToEmail($otp, $email) {
-    // Path to PHPMailer - adjust if needed based on your installation method
-    require 'vendor/autoload.php'; // Use this if installed via Composer
-    // OR use these if manually downloaded:
-    // require 'PHPMailer/src/Exception.php';
-    // require 'PHPMailer/src/PHPMailer.php';
-    // require 'PHPMailer/src/SMTP.php';
+    // API approach for Mailtrap
+    $url = 'https://send.api.mailtrap.io/api/send';
+    $api_key = '81ad296e6249f7accb86bd48abfcd047';
     
-    // Create a new PHPMailer instance
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-    
-    try {
-        // Server settings
-        $mail->isSMTP();                                      // Use SMTP
-        $mail->Host       = 'smtp.gmail.com';                 // SMTP server address (example: Gmail)
-        $mail->SMTPAuth   = true;                             // Enable SMTP authentication
-        $mail->Username   = 'ydkdan6@gmail.com';           // SMTP username
-        $mail->Password   = 'pajsikmxnokfyxav';              // SMTP password or app password
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-        $mail->Port       = 587;                              // TCP port to connect to
-        
-        // Recipients
-        $mail->setFrom('ydkdan6@gmail.com', 'Student Results System');
-        $mail->addAddress($email);                            // Add recipient
-        
-        // Content
-        $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = 'Your OTP Verification Code';
-        $mail->Body    = "
+    // Prepare email content
+    $data = [
+        'from' => [
+            'email' => 'hello@demomailtrap.co',
+            'name' => 'Student Results System'
+        ],
+        'to' => [
+            [
+                'email' => $email
+            ]
+        ],
+        'subject' => 'Your OTP Verification Code',
+        'html' => "
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
                 <h2 style='color: #333;'>OTP Verification</h2>
                 <p>Your One-Time Password (OTP) for accessing student results is:</p>
@@ -209,14 +198,49 @@ function sendOTPToEmail($otp, $email) {
                     This is an automated email. Please do not reply to this message.
                 </p>
             </div>
-        ";
-        $mail->AltBody = "Your OTP verification code is: {$otp}. This code will expire in 5 minutes.";
-        
-        // Send the email
-        $mail->send();
-        return json_encode(['success' => true, 'message' => 'OTP sent successfully']);
-    } catch (Exception $e) {
-        return json_encode(['success' => false, 'error' => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+        ",
+        'text' => "Your OTP verification code is: {$otp}. This code will expire in 5 minutes.",
+        'category' => 'OTP Verification'
+    ];
+    
+    // Initialize cURL session
+    $ch = curl_init($url);
+    
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $api_key,
+        'Content-Type: application/json'
+    ]);
+    
+    // Execute cURL request
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+    // Close cURL session
+    curl_close($ch);
+    
+    // Process response
+    if ($error) {
+        return json_encode([
+            'success' => false, 
+            'error' => "API request failed: " . $error
+        ]);
+    } else {
+        if ($http_code >= 200 && $http_code < 300) {
+            return json_encode([
+                'success' => true, 
+                'message' => 'OTP sent successfully via Mailtrap API'
+            ]);
+        } else {
+            return json_encode([
+                'success' => false, 
+                'error' => "API request failed with status code: " . $http_code . ", Response: " . $response
+            ]);
+        }
     }
 }
 

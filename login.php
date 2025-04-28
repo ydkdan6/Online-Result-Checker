@@ -87,7 +87,7 @@ header("location:index.php?page=home");
         <div class="container-fluid">
           <form id="vsr-frm">
             <div class="form-group">
-                <label for="student_code" class="control-label text-dark">Student ID #:</label>
+                <label for="student_code" class="control-label text-dark">Student Registration Number #:</label>
                 <input type="text" id="student_code" name="student_code" class="form-control form-control-sm">
               </div>
 
@@ -263,7 +263,7 @@ header("location:index.php?page=home");
         });
 
       } else {
-        $('#vsr-frm').prepend('<div class="alert alert-danger">' + (resp.message || 'Student ID # is incorrect.') + '</div>');
+        $('#vsr-frm').prepend('<div class="alert alert-danger">' + (resp.message || 'Student Registration Number # is incorrect.') + '</div>');
       }
 
       end_load();
